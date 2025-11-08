@@ -21,6 +21,8 @@ Modified from guided-diffusion/scripts/image_sample.py
 - 反演与重建均调用 diffusion 对象内置的 `ddim_reverse_sample_loop` 与 `ddim_sample_loop` 工具函数，无需自行实现。
 """
 
+import wandb
+
 import argparse
 import os
 import torch
@@ -34,6 +36,7 @@ import torchvision.transforms as transforms
 import numpy as np
 import torch as th
 import torch.distributed as dist
+
 
 # Helpers for distributed info and barrier
 def _dist_info():
@@ -186,6 +189,11 @@ def main():
     if rank == 0:
         logger.configure(dir=args.recons_dir)
         logger.log(f"[auto] num_samples = {args.num_samples} (from images_dir='{args.images_dir}')")
+        wandb.init(
+            project="diffusion-reverse-recons",
+            name=os.path.basename(args.model_path) if args.model_path else "no-model-name",
+            config=vars(args),   # 把所有命令行参数塞进去，方便以后看
+        )
 
     # 创建重建输出与DIRE输出的目录
     os.makedirs(args.recons_dir, exist_ok=True)
@@ -463,11 +471,13 @@ def main():
                     np.save(os.path.join(dire2_save_dir, base + "_D2_raw.npy"), d2_raw[i].cpu().float().numpy())
         if rank == 0:
             logger.log(f"have finished {have_finished_images} samples")
+            wandb.log({"finished_samples": have_finished_images})
 
     # 等待所有进程结束，打印完成日志
     _maybe_barrier()
     if rank == 0:
         logger.log("finish computing recons & DIRE!")
+        wandb.finish()
 
 
 def create_argparser():
