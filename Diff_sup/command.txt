@@ -1,0 +1,90 @@
+# 镜像
+# PyTorch  2.8.0
+# Python  3.12(ubuntu22.04)
+# CUDA  12.8
+
+conda create -n fakeinv python=3.10 -y
+conda activate fakeinv
+
+cd 1_gen_fake
+chmod +x 1_gen_fake.sh
+./1_gen_fake.sh
+
+
+
+-----------------------------------------------------
+
+conda create -n dire python=3.10 -y
+conda activate dire
+
+cd
+cd 2_Reconstruct
+
+pip install -r requirements.txt
+
+
+chmod +x recon_metrics_lsun_train.sh
+./recon_metrics_lsun_train.sh
+
+chmod +x recon_metrics_lsun_test.sh
+./recon_metrics_lsun_test.sh
+
+chmod +x recon_metrics_imagenet_train.sh
+./recon_metrics_imagenet_train.sh
+
+chmod +x recon_metrics_imagenet_test.sh
+./recon_metrics_imagenet_test.sh
+
+chmod +x recon_metrics_laion_kan3_train.sh
+./recon_metrics_laion_kan3_train.sh
+
+chmod +x recon_metrics_laion_sdxl_train.sh
+./recon_metrics_laion_sdxl_train.sh
+
+chmod +x recon_metrics_laion_test.sh
+./recon_metrics_laion_test.sh
+
+cd 
+cd 3_DIRE_DIFF
+
+chmod +x train_lsun.sh
+./train_lsun.sh
+
+chmod +x train_image.sh
+./train_image.sh
+
+chmod +x train_laion_kan.sh
+./train_laion_kan.sh
+
+chmod +x train_laion_sdxl.sh
+./train_laion_sdxl.sh
+
+
+
+chmod +x test_lsun.sh
+./test_lsun.sh
+
+chmod +x test_img.sh
+./test_img.sh
+
+chmod +x test_laion.sh
+./test_laion.sh
+
+cd 
+cd 4_SUP
+
+chmod +x test_sup_lsun.sh
+./test_sup_lsun.sh
+
+chmod +x test_sup_img.sh
+./test_sup_img.sh
+
+chmod +x test_sup_laion.sh
+./test_sup_laion.sh
+
+
+
+
+
+
+
